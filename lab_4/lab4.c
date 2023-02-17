@@ -8,8 +8,9 @@ int FIRSTLINESTART = 17;
 
 void printSpaces(int num);
 void printLine(int doesBreak, int lineWidth);
-void printOne(char *text, int doesBreak);
-void printTwoCol(char *text1, char *text2);
+void printOne(char *text, char *alignment, int doesBreak);
+void printTwoCol(char *text1, char *alignment, char *text2, char *fill1,
+                 char *fill2);
 void printFullWidth(char *text);
 void printFullWidthDivided(char *text, int col);
 void printTwoHalves(char *text1, char *text2, char *text3, char *text4);
@@ -21,9 +22,12 @@ void printThreeHeadings(char *text1, char *text2, char *text3);
 void printShortLongLines(char *text);
 
 int main() {
-  printOne("Name: ", 1);
-  printTwoCol("Address: ", "City: ");
-  printTwoCol("Postal Code: ", "Phone: ");
+  printOne("Name: ", "left", 1);
+  printTwoCol("Address: ", "left", "City: ", "_", "_");
+  printTwoCol("Postal Code: ", "left", "Phone: ", "_", "_");
+
+  printf("\n");
+
   printFullWidth("Job Objective: ");
   printFullWidth("");
   printFullWidth("");
@@ -35,10 +39,10 @@ int main() {
   printf("\n");
 
   printf("Work Experience: \n");
-  printTwoCol("    Job Title: ", "Job Title: ");
+  printTwoCol("    Job Title: ", "right", "Job Title: ", "_", "_");
   printTwoHalves("    From: ", "To: ", "From: ", "To: ");
-  printTwoCol("    Company: ", "Company: ");
-  printTwoCol("    Address: ", "Address: ");
+  printTwoCol("    Company: ", "right", "Company: ", "_", "_");
+  printTwoCol("    Address: ", "right", "Address: ", "_", "_");
   printTwoHalves("    Duties: ", "", "Duties: ", "");
   printTwoHalves("", "", "", "");
   printTwoHalves("", "", "", "");
@@ -57,40 +61,56 @@ int main() {
   printTwoHeadings("Volunteer Work: ", "References: ");
 
   printOneAndHalf("    Where: ", "Name: ", "Position: ");
-  printTwoCol("    Duties: ", "Phone: ");
-  printOne("", 1);
-  printOne("", 1);
+  printTwoCol("    Duties: ", "right", "Phone: ", "_", "_");
+  printOne("", "right", 1);
+  printOneAndHalf("", "Name: ", "Position: ");
+  printTwoCol("", "right", "Phone: ", " ", "_");
 
-  printOneAndHalf("    Where: ", "Name: ", "Position: ");
-  printTwoCol("    Duties: ", "Phone: ");
-  printOne("", 1);
-  printOne("", 1);
-
-  printOneAndHalf("    Where: ", "Name: ", "Position: ");
-  printTwoCol("    Duties: ", "Phone: ");
-  printOne("", 1);
-  printOne("", 1);
+  printOne("    Where: ", "right", 1);
+  printOneAndHalf("    Duties: ", "Name: ", "Position: ");
+  printTwoCol("", "right", "Phone: ", "_", "_");
+  printOne("", "right", 1);
 
   return 0;
 }
 
-void printOne(char *text, int doesBreak) {
-  printSpaces(FIRSTLINESTART - strlen(text));
+void printOne(char *text, char *alignment, int doesBreak) {
+  if (strcmp(alignment, "right") == 0) {
+    printSpaces(FIRSTLINESTART - strlen(text));
+  }
   printf("%s", text);
+  if (strcmp(alignment, "left") == 0) {
+    printSpaces(FIRSTLINESTART - strlen(text));
+  }
   printLine(doesBreak, LINEWIDTH);
 }
 
-void printTwoCol(char *text1, char *text2) {
-  printSpaces(FIRSTLINESTART - strlen(text1));
+void printTwoCol(char *text1, char *alignment, char *text2, char *fill1,
+                 char *fill2) {
+  if (strcmp(alignment, "right") == 0) {
+    printSpaces(FIRSTLINESTART - strlen(text1));
+  }
   printf("%s", text1);
-  printLine(0, LINEWIDTH);
+  if (strcmp(alignment, "left") == 0) {
+    printSpaces(FIRSTLINESTART - strlen(text1));
+  }
+  if (strcmp(fill1, " ") == 0) {
+    printSpaces(LINEWIDTH);
+  } else {
+    printLine(0, LINEWIDTH);
+  }
 
   int spacing = RESUMEWIDTH - 2 * LINEWIDTH - FIRSTLINESTART - strlen(text2);
 
   printSpaces(spacing);
 
   printf("%s", text2);
-  printLine(1, LINEWIDTH);
+  if (strcmp(fill2, " ") == 0) {
+    printSpaces(LINEWIDTH);
+    printf("\n");
+  } else {
+    printLine(1, LINEWIDTH);
+  }
 }
 
 void printFullWidth(char *text) {
@@ -106,7 +126,8 @@ void printFullWidthDivided(char *text, int col) {
   int lineWidth = (int)(RESUMEWIDTH - FIRSTLINESTART) / col - spacing;
   for (int i = 0; i < col; i++) {
     if (i == col - 1) {
-      lineWidth += spacing + (RESUMEWIDTH - FIRSTLINESTART) - (lineWidth * 4 + spacing * 4);
+      lineWidth += spacing + (RESUMEWIDTH - FIRSTLINESTART) -
+                   (lineWidth * 4 + spacing * 4);
     }
     printLine(0, lineWidth);
     printSpaces(spacing);
@@ -134,8 +155,8 @@ void printTwoHeadings(char *text1, char *text2) {
 }
 
 void printThreeHeadings(char *text1, char *text2, char *text3) {
-  int smallWidth = (int) RESUMEWIDTH / 8;
-  int p1 = (int) smallWidth / 2 - strlen(text2) / 2;
+  int smallWidth = (int)RESUMEWIDTH / 8;
+  int p1 = (int)smallWidth / 2 - strlen(text2) / 2;
   int remaining = RESUMEWIDTH - (strlen(text1) + smallWidth);
   int p2 = (int)remaining / 2 - strlen(text3) / 2;
 
@@ -153,7 +174,7 @@ void printThreeHeadings(char *text1, char *text2, char *text3) {
 
 void printShortLongLines(char *text) {
   int spacing = 5;
-  int smallWidth = (int) RESUMEWIDTH / 8;
+  int smallWidth = (int)RESUMEWIDTH / 8;
   int remaining = RESUMEWIDTH - (FIRSTLINESTART + smallWidth + spacing);
   printSpaces(FIRSTLINESTART - strlen(text));
   printLine(0, smallWidth);
@@ -162,7 +183,7 @@ void printShortLongLines(char *text) {
 }
 
 void printOneAndHalf(char *text1, char *text2, char *text3) {
-  printOne(text1, 0);
+  printOne(text1, "right", 0);
   printHalfCols(text2, text3, RESUMEWIDTH / 2, 2, 1);
 }
 
