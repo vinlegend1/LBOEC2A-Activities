@@ -80,7 +80,7 @@ int main() {
 
         printf("%-20s %-6s %-6s %-6s %-10s %-8s ", "Name", "Quiz 1", "Quiz 2", "Quiz 3", "Quiz Total", "Quiz Avg");
         printf("%-12s %-12s %-12s %-16s %-14s ", "Recitation 1", "Recitation 2", "Recitation 3", "Recitation Total", "Recitation Avg");
-        printf("%-11s %-11s %-11s %-15s %-13s ", "Long Exam 1", "Long Exam 2", "Long Exam 3", "Long Exam Total", "Recitation Avg");
+        printf("%-11s %-11s %-11s %-15s %-13s ", "Long Exam 1", "Long Exam 2", "Long Exam 3", "Long Exam Total", "Long Exam Avg");
         printf("%-11s\n", "Final Grade");
         printf("%-20s %-6.1f %-6.1f %-6.1f %-10.1f %-8.1f ", name, q1, q2, q3, qTotal, qPercent);
         printf("%-12.1f %-12.1f %-12.1f %-16.1f %-14.1f ", r1, r2, r3, rTotal, rPercent);
