@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-int RESUMEWIDTH = 116;
-int LINEWIDTH = 38;
+int RESUMEWIDTH = 130;
+int LINEWIDTH = 49;
 int FIRSTLINESTART = 17;
 
 void printSpaces(int num);
