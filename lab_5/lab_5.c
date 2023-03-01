@@ -151,11 +151,11 @@ int main() {
   printf("What is your second job objective (if any, type \"none\" if none)? ");
   scanf("%[^\n]%*c", jobObjective2);
 
-  if (strcmp(jobObjective2, "none") != 0) {
+  if (!isNone(jobObjective2)) {
     printf(
         "What is your third job objective (if any, type \"none\" if none)? ");
     scanf("%[^\n]%*c", jobObjective3);
-    if (strcmp(jobObjective3, "none") != 0) {
+    if (!isNone(jobObjective3)) {
       printf("What is your fourth job objective (if any, type \"none\" if "
              "none)? ");
       scanf("%[^\n]%*c", jobObjective4);
@@ -188,14 +188,23 @@ int main() {
     scanf("%[^\n]%*c", firstDuty1);
     printf("Duty 2 (type none if none): ");
     scanf("%[^\n]%*c", firstDuty2);
-    printf("Duty 3 (type none if none): ");
-    scanf("%[^\n]%*c", firstDuty3);
-    printf("Duty 4 (type none if none): ");
-    scanf("%[^\n]%*c", firstDuty4);
-    printf("Duty 5 (type none if none): ");
-    scanf("%[^\n]%*c", firstDuty5);
-    printf("Duty 6 (type none if none): ");
-    scanf("%[^\n]%*c", firstDuty6);
+
+    if (!isNone(firstDuty2)) {
+      printf("Duty 3 (type none if none): ");
+      scanf("%[^\n]%*c", firstDuty3);
+      if (!isNone(firstDuty3)) {
+        printf("Duty 4 (type none if none): ");
+        scanf("%[^\n]%*c", firstDuty4);
+        if (!isNone(firstDuty4)) {
+          printf("Duty 5 (type none if none): ");
+          scanf("%[^\n]%*c", firstDuty5);
+          if (!isNone(firstDuty5)) {
+            printf("Duty 6 (type none if none): ");
+            scanf("%[^\n]%*c", firstDuty6);
+          }
+        }
+      }
+    }
 
     printf("Have you worked for another company (y/n)? ");
     scanf("%c", &hasSecondJob);
@@ -220,14 +229,22 @@ int main() {
       scanf("%[^\n]%*c", secondDuty1);
       printf("Duty 2 (type none if none): ");
       scanf("%[^\n]%*c", secondDuty2);
-      printf("Duty 3 (type none if none): ");
-      scanf("%[^\n]%*c", secondDuty3);
-      printf("Duty 4 (type none if none): ");
-      scanf("%[^\n]%*c", secondDuty4);
-      printf("Duty 5 (type none if none): ");
-      scanf("%[^\n]%*c", secondDuty5);
-      printf("Duty 6 (type none if none): ");
-      scanf("%[^\n]%*c", secondDuty6);
+      if (!isNone(secondDuty2)) {
+        printf("Duty 3 (type none if none): ");
+        scanf("%[^\n]%*c", secondDuty3);
+        if (!isNone(secondDuty3)) {
+          printf("Duty 4 (type none if none): ");
+          scanf("%[^\n]%*c", secondDuty4);
+          if (!isNone(secondDuty4)) {
+            printf("Duty 5 (type none if none): ");
+            scanf("%[^\n]%*c", secondDuty5);
+            if (!isNone(secondDuty5)) {
+              printf("Duty 6 (type none if none): ");
+              scanf("%[^\n]%*c", secondDuty6);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -252,8 +269,7 @@ int main() {
     }
   }
 
-  printf("Had any volunteer work (y/n)? ");
-  scanf("%c", &didVolunteer);
+  didVolunteer = 'y';
 
   if (isYes(didVolunteer)) {
     printf("Where did you volunteer at (What is the name of the "
@@ -262,10 +278,14 @@ int main() {
     printf("Enumerate your Duties:\n");
     printf("Duty 1:\n");
     scanf("%[^\n]%*c", volunteerWork1Duty1);
-    printf("Duty 2:\n");
-    scanf("%[^\n]%*c", volunteerWork1Duty2);
-    printf("Duty 3:\n");
-    scanf("%[^\n]%*c", volunteerWork1Duty3);
+    if (!isNone(volunteerWork1Duty1)) {
+      printf("Duty 2:\n");
+      scanf("%[^\n]%*c", volunteerWork1Duty2);
+      if (!isNone(volunteerWork1Duty2)) {
+        printf("Duty 3:\n");
+        scanf("%[^\n]%*c", volunteerWork1Duty3);
+      }
+    }
 
     printf("Would you like to add another volunteer work entry (y/n)?");
     scanf("%c", &didVolunteer2);
@@ -277,10 +297,14 @@ int main() {
       printf("Enumerate your Duties:\n");
       printf("Duty 1:\n");
       scanf("%[^\n]%*c", volunteerWork2Duty1);
-      printf("Duty 2:\n");
-      scanf("%[^\n]%*c", volunteerWork2Duty2);
-      printf("Duty 3:\n");
-      scanf("%[^\n]%*c", volunteerWork2Duty3);
+      if (!isNone(volunteerWork2Duty1)) {
+        printf("Duty 2:\n");
+        scanf("%[^\n]%*c", volunteerWork2Duty2);
+        if (!isNone(volunteerWork2Duty2)) {
+          printf("Duty 3:\n");
+          scanf("%[^\n]%*c", volunteerWork2Duty3);
+        }
+      }
     }
   }
 
@@ -300,13 +324,16 @@ int main() {
   printf("Phone Number of %s: ", ref2Name);
   scanf("%[^\n]%*c", ref2Phone);
 
-  printf("Details of Second Reference:\n");
+  printf("Details of Third Reference:\n");
   printf("Name: ");
   scanf("%[^\n]%*c", ref3Name);
   printf("Position of %s: ", ref3Name);
-  scanf("%[^\n]%*c", ref3Pos);
+  scanf(" %[^\n]%*c", ref3Pos);
   printf("Phone Number of %s: ", ref3Name);
-  scanf("%[^\n]%*c", ref3Phone);
+  scanf("%s", ref3Phone);
+
+  printf("\n");
+  printf("Resume generated: \n");
 
   printResumeTemplate(
       name, address, city, postalCode, phone, jobObjective1, jobObjective2,
@@ -469,9 +496,15 @@ void printResumeTemplate(
 
   printf("\n");
   printf("  Job Objective: %-113s\n", jobObjective1);
-  printf("                 %-113s\n", jobObjective2);
-  printf("                 %-113s\n", jobObjective3);
-  printf("                 %-113s\n", jobObjective4);
+  if (!isNone(jobObjective2)) {
+    printf("                 %-113s\n", jobObjective2);
+    if (!isNone(jobObjective3)) {
+      printf("                 %-113s\n", jobObjective3);
+      if (!isNone(jobObjective4)) {
+        printf("                 %-113s\n", jobObjective4);
+      }
+    }
+  }
 
   printf("\n");
 
@@ -499,18 +532,68 @@ void printResumeTemplate(
              "%-49s   "
              "   Address: %-49s\n",
              companyAddress1, companyAddress2);
-      printf("         Duties: %-16s                 "
-             "%-16s   "
-             "    Duties: %-16s                 %-16s\n",
-             firstDuty1, firstDuty2, secondDuty1, secondDuty2);
-      printf("                 %-16s                 "
-             "%-16s   "
-             "            %-16s                 %-16s\n",
-             firstDuty3, firstDuty4, secondDuty3, secondDuty4);
-      printf("                 %-16s                 "
-             "%-16s   "
-             "            %-16s                 %-16s\n",
-             firstDuty5, firstDuty6, secondDuty5, secondDuty6);
+      if (!isNone(firstDuty2)) {
+        printf("         Duties: %-16s                 %-16s   ", firstDuty1,
+               firstDuty2);
+      } else {
+        printf("         Duties: %-16s                                    ",
+               firstDuty1);
+      }
+
+      if (!isNone(secondDuty2)) {
+        printf("    Duties: %-16s                 %-16s\n", secondDuty1,
+               secondDuty2);
+
+        if (!isNone(firstDuty3)) {
+          printf("                 %-16s                 ", firstDuty3);
+          if (!isNone(firstDuty4)) {
+            printf("%-16s   ", firstDuty4);
+          } else {
+            printf("                   ");
+          }
+        } else {
+          printf("                                                  ");
+        }
+
+        if (!isNone(secondDuty3)) {
+          printf("            %-16s                 %-16s\n", secondDuty3,
+                 secondDuty4);
+          if (!isNone(firstDuty5)) {
+            printf("                 %-16s                 ", firstDuty5);
+            if (!isNone(firstDuty6)) {
+              printf("%-16s   ", firstDuty6);
+            } else {
+              printf("                   ");
+            }
+          } else {
+            printf("                                                  ");
+          }
+
+          if (!isNone(secondDuty5)) {
+            printf("            %-16s                 %-16s\n", secondDuty5,
+                   secondDuty6);
+          } else {
+            printf(
+                "                                                             "
+                "\n");
+          }
+        } else {
+          printf("                                                             "
+                 "\n");
+        }
+
+      } else {
+        printf("    Duties: %-16s                                 \n",
+               secondDuty1);
+      }
+      // printf("                 %-16s                 "
+      //        "%-16s   "
+      //        "            %-16s                 %-16s\n",
+      //        firstDuty3, firstDuty4, secondDuty3, secondDuty4);
+      // printf("                 %-16s                 "
+      //        "%-16s   "
+      //        "            %-16s                 %-16s\n",
+      //        firstDuty5, firstDuty6, secondDuty5, secondDuty6);
 
     } else {
       printf("      Job Title: %-49s\n", jobTitle1);
@@ -518,18 +601,35 @@ void printResumeTemplate(
       printf("        Company: "
              "%-49s\n",
              company1);
-      printf("        Address: "
-             "%-49s\n",
-             companyAddress1);
-      printf("         Duties: %-20s         "
-             "%-20s\n",
-             firstDuty1, firstDuty2);
-      printf("                 %-20s         "
-             "%-20s\n",
-             firstDuty3, firstDuty4);
-      printf("                 %-20s         "
-             "%-20s\n",
-             firstDuty5, firstDuty6);
+      printf("        Address: %-49s\n", companyAddress1);
+      if (!isNone(firstDuty2)) {
+        printf("         Duties: %-20s         "
+               "%-20s\n",
+               firstDuty1, firstDuty2);
+
+        if (!isNone(firstDuty3)) {
+          printf("                 %-20s         "
+                 "%-20s\n",
+                 firstDuty3, firstDuty4);
+          if (!isNone(firstDuty5)) {
+            printf("                 %-20s         "
+                   "%-20s\n",
+                   firstDuty5, firstDuty6);
+          } else {
+            printf("                 %-20s         "
+                   "                    \n",
+                   firstDuty5);
+          }
+        } else {
+          printf("                 %-20s         "
+                 "                    \n",
+                 firstDuty3);
+        }
+      } else {
+        printf("         Duties: %-20s         "
+               "                    \n",
+               firstDuty1);
+      }
     }
     printf("\n");
   }
@@ -537,14 +637,18 @@ void printResumeTemplate(
   printf("      Education:       Date                                       "
          "Type of Course/Degree and Where Taken\n");
   printf("                 %16s     "
-         "%92s\n",
+         "%-92s\n",
          educationDate1, education1);
-  printf("                 %16s     "
-         "%92s\n",
-         educationDate2, education2);
-  printf("                 %16s     "
-         "%92s\n",
-         educationDate3, education3);
+  if (!isNone(education2)) {
+    printf("                 %-16s     "
+           "%-92s\n",
+           educationDate2, education2);
+  }
+  if (!isNone(education3)) {
+    printf("                 %-16s     "
+           "%-92s\n",
+           educationDate3, education3);
+  }
 
   printf("\n");
 
@@ -559,15 +663,27 @@ void printResumeTemplate(
     printf("         Duties: %-49s   "
            "     Phone: %-49s\n",
            volunteerWork1Duty1, ref1Phone);
-    printf("                 %-49s\n", volunteerWork1Duty2);
-    printf("                 %-49s    "
-           "  "
-           "   Name: %-16s       Position: %-16s        \n",
-           volunteerWork1Duty3, ref2Name, ref2Pos);
+    if (!isNone(volunteerWork1Duty2)) {
+      printf("                 %-49s\n", volunteerWork1Duty2);
+      if (!isNone(volunteerWork1Duty3)) {
+        printf("                 %-49s    "
+               "  ",
+               volunteerWork1Duty3);
+      } else {
+        printf(
+            "                                                                 "
+            "       ");
+      }
+    } else {
+      printf("\n");
+    }
+
+    printf("   Name: %-16s       Position: %-16s        \n", ref2Name, ref2Pos);
     printf("                                                                 "
            "    "
            "     Phone: %-49s\n",
            ref2Phone);
+
     if (isYes(didVolunteer2)) {
       printf("          Where: %-49s\n", volunteerWork2Where);
       printf("         Duties: %-49s   "
