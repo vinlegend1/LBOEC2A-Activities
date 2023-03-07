@@ -616,14 +616,12 @@ void printResumeTemplate(
                    "%-20s\n",
                    firstDuty5, firstDuty6);
           } else {
-            printf("                 %-20s         "
-                   "                    \n",
-                   firstDuty5);
+            printf("                                              "
+                   "                    \n");
           }
         } else {
-          printf("                 %-20s         "
-                 "                    \n",
-                 firstDuty3);
+          printf("                                              "
+                 "                    \n");
         }
       } else {
         printf("         Duties: %-20s         "

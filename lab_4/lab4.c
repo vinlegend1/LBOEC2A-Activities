@@ -138,7 +138,7 @@ void printFullWidthDivided(char *text, int col) {
 
 void printTwoHalves(char *text1, char *text2, char *text3, char *text4) {
   printHalfCols(text1, text2, RESUMEWIDTH / 2, 1, 0);
-  printHalfCols(text1, text2, RESUMEWIDTH / 2, 2, 1);
+  printHalfCols(text3, text4, RESUMEWIDTH / 2, 2, 1);
 }
 
 void printTwoHeadings(char *text1, char *text2) {
