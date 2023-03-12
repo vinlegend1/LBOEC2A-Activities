@@ -132,39 +132,6 @@ void fgetsIgnored(char *string, int size) {
   string[strcspn(string, "\n")] = '\0';
 }
 
-User printRegisterScreen() {
-  char name[NAME_LENGTH], password[PASSWORD_LENGTH], username[USERNAME_LENGTH];
-  float initBalance;
-  printLine();
-  printf("Welcome to Bank X Registration Page\n");
-  printf("What is your name? ");
-  getchar();
-  fgetsIgnored(name, NAME_LENGTH);
-  printf("What is your username (Think of one, maximum 14 characters)? ");
-  fgetsIgnored(username, USERNAME_LENGTH);
-  printf("What will be the password the your bank account? ");
-  fgetsIgnored(password, PASSWORD_LENGTH);
-  printf("What will be your initial deposit to the bank account (minimum of "
-         "Php20,000)? ");
-  scanf("%f", &initBalance);
-
-  FILE *userFile;
-  userFile = fopen(USERS_FILE, "a");
-
-  if (userFile == NULL) {
-    printf("SOMETHING WENT WRONG!");
-    exit(1);
-  }
-
-  fprintf(userFile, "%s;%s;%s;%d;%.2f;%.2f\n", username, name, password, 0,
-          initBalance, 0.0);
-  fclose(userFile);
-  printf("SUCCESSFULLY SAVED USER TO DATABASE! YOU MAY NOW LOGIN! YOU WILL BE "
-         "REDIRECTED TO THE LOGIN PAGE!\n");
-  printThankYouScreen();
-  return newUser(username, name, password, 0, initBalance, 0);
-}
-
 char *getUsername(char *string) {
   int endIndex = 0;
   for (int i = 0; string[i] != 0; i++) {
@@ -287,6 +254,48 @@ char *getPassword(char *string) {
   } else {
     return "";
   }
+}
+
+void printRegisterScreen() {
+  char name[NAME_LENGTH], password[PASSWORD_LENGTH], username[USERNAME_LENGTH];
+  float initBalance;
+  char line[MAX_LINE_LENGTH];
+
+  printLine();
+  printf("Welcome to Bank X Registration Page\n");
+  printf("What is your name? ");
+  getchar();
+  fgetsIgnored(name, NAME_LENGTH);
+  printf("What is your username (Think of one, maximum 14 characters)? ");
+  fgetsIgnored(username, USERNAME_LENGTH);
+  printf("What will be the password the your bank account? ");
+  fgetsIgnored(password, PASSWORD_LENGTH);
+  printf("What will be your initial deposit to the bank account (minimum of "
+         "Php20,000)? ");
+  scanf("%f", &initBalance);
+
+  FILE *userFile;
+  userFile = fopen(USERS_FILE, "a+");
+
+  if (userFile == NULL) {
+    printf("SOMETHING WENT WRONG!");
+    exit(1);
+  }
+  while (fgets(line, MAX_LINE_LENGTH, userFile)) {
+    char *lineUsername = getUsername(line);
+    if (strcmp(username, lineUsername) == 0) {
+      printf("USERNAME ALREADY EXISTS! YOU WILL BE REDIRECTED BACK TO THE "
+             "LOGIN PAGE! PLEASE LOGIN INSTEAD OF REGISTERING. THANK YOU.\n");
+      return;
+    }
+  }
+
+  fprintf(userFile, "%s;%s;%s;%d;%.2f;%.2f\n", username, name, password, 0,
+          initBalance, 0.0);
+  fclose(userFile);
+  printf("SUCCESSFULLY SAVED USER TO DATABASE! YOU MAY NOW LOGIN! YOU WILL BE "
+         "REDIRECTED TO THE LOGIN PAGE!\n");
+  printThankYouScreen();
 }
 
 User printLoginScreen(User *ptr, int *arrayLen) {
@@ -796,7 +805,7 @@ int main() {
   do {
     switch (afterWelcome) {
     case 1:
-      currentUser = printRegisterScreen();
+      printRegisterScreen();
       retry = 1;
       afterWelcome = 2;
       break;
@@ -819,12 +828,12 @@ int main() {
   if (strcmp(currentUser.username, "") != 0) {
     printBankScreen(&currentUser, &date, &rawTime);
     for (int i = 0; i < numOfUsers; i++) {
-        if (strcmp((usersPtr + i)->username, currentUser.username) == 0) {
-            (usersPtr + i)->currentBalance = currentUser.currentBalance;
-            (usersPtr + i)->debt = currentUser.debt;
-            (usersPtr + i)->ccLimit = currentUser.ccLimit;
-            break;
-        }
+      if (strcmp((usersPtr + i)->username, currentUser.username) == 0) {
+        (usersPtr + i)->currentBalance = currentUser.currentBalance;
+        (usersPtr + i)->debt = currentUser.debt;
+        (usersPtr + i)->ccLimit = currentUser.ccLimit;
+        break;
+      }
     }
     updateAndSaveData(usersPtr, numOfUsers);
   }
