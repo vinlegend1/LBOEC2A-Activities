@@ -778,7 +778,6 @@ void printBankScreen(User *currentUser, struct tm *date, struct tm *rawTime) {
                        &dueDate);
       break;
     case 9:
-      printThankYouScreen();
       retry = 0;
       break;
     default:
@@ -813,7 +812,6 @@ int main() {
       currentUser = printLoginScreen(usersPtr, &numOfUsers);
       retry = 0;
       break;
-      retry = 0;
     case 3:
       printThankYouScreen();
       exit(1);
