@@ -274,6 +274,11 @@ void printRegisterScreen() {
          "Php20,000)? ");
   scanf("%f", &initBalance);
 
+  if (initBalance < 20000.0) {
+      printf("YOUR REGISTER IS INVALID BECAUSE OF LACK OF INITIAL DEPOSIT.");
+      return;
+  }
+
   FILE *userFile;
   userFile = fopen(USERS_FILE, "a+");
 

@@ -1,1 +1,2 @@
-vince_hong;Vincent Hong;asdfgh;0;160000.00;0.00
+vince_hong;Vincent Hong;asdfgh;42000;230650.00;0.00
+ben_awad;Ben Awad;123456;0;1082911.38;0.00
