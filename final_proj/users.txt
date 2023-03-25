@@ -1,2 +1,6 @@
-vince_hong;Vincent Hong;asdfgh;42000;230650.00;0.00
+vince_hong;Vincent Hong;asdfgh;42000;267440.13;0.00
 ben_awad;Ben Awad;123456;0;1082911.38;0.00
+enuk_abas;Enuk Abas;1234;0;20000.00;0.00
+Gay;AdrianisGay;dionisio;0;300000.00;0.00
+dan_gan;Daniel Seth Gan;hello;2040000;11728700.00;0.00
+guido;Guido Fernandez;12345;25400;128038.35;10076.98
