@@ -24,12 +24,22 @@ struct User {
   int ccLimit;
   float currentBalance;
   float debt;
+  char *lastLogin;
 };
+
 typedef struct User User;
 enum operation { WITHDRAW, DEPOSIT, BORROW, DEBT_INT, CREDIT_INT, PAY_CC };
 
+struct tm getTime() {
+  time_t currentTime = time(NULL);
+  struct tm dateAndTime = *localtime(&currentTime);
+  mktime(&dateAndTime);
+
+  return dateAndTime;
+}
+
 User newUser(char *username, char *name, char *password, int ccLimit,
-             float currentBalance, float debt) {
+             float currentBalance, float debt, char *lastLogin) {
   User user;
   user.username = username;
   user.name = name;
@@ -37,6 +47,7 @@ User newUser(char *username, char *name, char *password, int ccLimit,
   user.ccLimit = ccLimit;
   user.currentBalance = currentBalance;
   user.debt = debt;
+  user.lastLogin = lastLogin;
   return user;
 }
 
@@ -224,6 +235,29 @@ char *getDebt(char *string) {
     } else if (ind == 4 && string[i] == ';') {
       startIndex = i + 1;
       ind++;
+    } else if (ind == 5 && string[i] == ';') {
+      endIndex = i;
+      break;
+    }
+  }
+  if (endIndex != 0 || startIndex != 0) {
+    return substr(string, startIndex, endIndex);
+  } else {
+    return "";
+  }
+}
+
+char *getLastLogin(char *string) {
+  int startIndex = 0;
+  int endIndex = 0;
+  int ind = 0;
+
+  for (int i = 0; string[i] != 0; i++) {
+    if (ind < 5 && string[i] == ';') {
+      ind++;
+    } else if (ind == 5 && string[i] == ';') {
+      startIndex = i + 1;
+      ind++;
     }
     endIndex++;
   }
@@ -275,8 +309,8 @@ void printRegisterScreen() {
   scanf("%f", &initBalance);
 
   if (initBalance < 20000.0) {
-      printf("YOUR REGISTER IS INVALID BECAUSE OF LACK OF INITIAL DEPOSIT.");
-      return;
+    printf("YOUR REGISTER IS INVALID BECAUSE OF LACK OF INITIAL DEPOSIT.");
+    return;
   }
 
   FILE *userFile;
@@ -295,7 +329,7 @@ void printRegisterScreen() {
     }
   }
 
-  fprintf(userFile, "%s;%s;%s;%d;%.2f;%.2f\n", username, name, password, 0,
+  fprintf(userFile, "%s;%s;%s;%d;%.2f;%.2f;none\n", username, name, password, 0,
           initBalance, 0.0);
   fclose(userFile);
   printf("SUCCESSFULLY SAVED USER TO DATABASE! YOU MAY NOW LOGIN! YOU WILL BE "
@@ -309,6 +343,7 @@ User printLoginScreen(User *ptr, int *arrayLen) {
   char ans;
   User loggedInUser;
   int login = 0;
+  struct tm dateToday = getTime();
 
   do {
     printf("Login to your bank account:\n");
@@ -334,6 +369,7 @@ User printLoginScreen(User *ptr, int *arrayLen) {
       char *ccLimit = getCCLimit(line);
       char *debt = getDebt(line);
       char *balance = getCurrentBalance(line);
+      char *lastLogin = getLastLogin(line);
 
       (ptr + i)->username = tempUsername;
       (ptr + i)->password = tempPassword;
@@ -342,10 +378,16 @@ User printLoginScreen(User *ptr, int *arrayLen) {
       (ptr + i)->debt = atof(debt);
       (ptr + i)->currentBalance = atof(balance);
 
+      if (strcmp(lastLogin, "none") == 0) {
+        (ptr + i)->lastLogin = asctime(&dateToday);
+      } else {
+        (ptr + i)->lastLogin = lastLogin;
+      }
+
       if (strcmp(username, tempUsername) == 0 &&
           strcmp(password, tempPassword) == 0) {
         loggedInUser = newUser(tempUsername, name, tempPassword, atoi(ccLimit),
-                               atof(balance), atof(debt));
+                               atof(balance), atof(debt), (ptr + i)->lastLogin);
         login = 1;
       }
       i++;
@@ -363,20 +405,12 @@ User printLoginScreen(User *ptr, int *arrayLen) {
     ans = getchar();
   } while (ans == 'Y' || ans == 'y');
 
-  return newUser("", "", "", 0, 0, 0);
+  return newUser("", "", "", 0, 0, 0, "");
 }
 
 void printWrongInputScreen() {
   printLine();
   printf("SORRY YOU HAVE MADE AN INVALID INPUT\n");
-}
-
-struct tm getTime() {
-  time_t currentTime = time(NULL);
-  struct tm dateAndTime = *localtime(&currentTime);
-  mktime(&dateAndTime);
-
-  return dateAndTime;
 }
 
 void printBankChoices(int *ans, User *currentUser, struct tm *date) {
@@ -389,6 +423,7 @@ void printBankChoices(int *ans, User *currentUser, struct tm *date) {
   printf("Your current credit card limit: %d\n", currentUser->ccLimit);
   printf("Your current credit card debt: %.2f\n", currentUser->debt);
   printf("Current Date and Time: %s\n", asctime(date));
+  printf("Last Login Date and Time: %s\n", currentUser->lastLogin);
 
   printf("What would you like to do?\n");
   printf("(1) Withdraw Money\n");
@@ -579,9 +614,9 @@ void updateAndSaveData(User *ptr, int numOfUsers) {
   }
 
   for (int i = 0; i < numOfUsers; i++) {
-    fprintf(usersPtr, "%s;%s;%s;%d;%.2f;%.2f\n", (ptr + i)->username,
+    fprintf(usersPtr, "%s;%s;%s;%d;%.2f;%.2f;%s", (ptr + i)->username,
             (ptr + i)->name, (ptr + i)->password, (ptr + i)->ccLimit,
-            (ptr + i)->currentBalance, (ptr + i)->debt);
+            (ptr + i)->currentBalance, (ptr + i)->debt, (ptr + i)->lastLogin);
   }
 
   fclose(usersPtr);
@@ -835,6 +870,7 @@ int main() {
         (usersPtr + i)->currentBalance = currentUser.currentBalance;
         (usersPtr + i)->debt = currentUser.debt;
         (usersPtr + i)->ccLimit = currentUser.ccLimit;
+        (usersPtr + i)->lastLogin = asctime(&rawTime);
         break;
       }
     }
