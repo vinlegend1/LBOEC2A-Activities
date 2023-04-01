@@ -63,6 +63,7 @@ int main() {
       break;
     }
     strncpy(jobObjectives[i], obj, 112);
+    limitJO++;
   }
 
   int limitSkill = 0;
@@ -75,16 +76,18 @@ int main() {
       break;
     }
     strncpy(skills[i], obj, 22);
+    limitSkill++;
   }
 
   int limitJobs = 0;
   int limitJobDuties = 0;
   for (int i = 0; i < numJobs; i++) {
-    char *from[15];
-    char *to[15];
-    char *comp[49];
-    char *compAd[49];
-    char *title[49];
+    char from[15];
+    char to[15];
+    char comp[49];
+    char compAd[49];
+    char title[49];
+    limitJobDuties = 0;
 
     printf("What is #%d job title (if none, type \"none\"): ", i + 1);
     scanf("%[^\n]%*c", title);
@@ -115,12 +118,14 @@ int main() {
         break;
       }
       strncpy(companyDuties[i][j], duty, 16);
+      limitJobDuties++;
     }
     strncpy(companies[i], comp, 49);
     strncpy(companyAddresses[i], compAd, 49);
     strncpy(froms[i], from, 15);
     strncpy(tos[i], to, 15);
-    strncpy(jobTitles[i], to, 49);
+    strncpy(jobTitles[i], title, 49);
+    limitJobs++;
   }
 
   int limitEdu = 0;
@@ -139,6 +144,7 @@ int main() {
     scanf("%[^\n]%*c", date);
     strncpy(educations[i], name, 92);
     strncpy(educationDates[i], date, 16);
+    limitEdu++;
   }
 
   int limitVol = 0;
@@ -158,7 +164,7 @@ int main() {
 
       printf("What is your #%d duty at this organization? (if none, type "
              "\"none\")",
-             i + 1);
+             j + 1);
       scanf("%[^\n]%*c", duty);
 
       if (isNone(duty)) {
@@ -168,6 +174,7 @@ int main() {
       strncpy(volunteerDuties[i][j], duty, 49);
     }
     strncpy(volunteerWhere[i], where, 49);
+    limitVol++;
   }
 
   int limitRef = 0;
@@ -188,6 +195,7 @@ int main() {
     strncpy(referenceNames[i], name, 16);
     strncpy(referencePoss[i], pos, 16);
     strncpy(referencePhones[i], phone, 49);
+    limitRef++;
   }
 
   printOne("Name: ", "left", name, 1);
@@ -305,7 +313,7 @@ int main() {
   printThreeHeadings("Education: ", "Date",
                      "Type of Course/Degree and Where Taken");
   for (int i = 0; i < limitEdu; i++) {
-    printShortLongLines("", educationDates[i], educationDates[i]);
+    printShortLongLines("", educationDates[i], educations[i]);
   }
 
   printf("\n");
